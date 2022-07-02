@@ -1,0 +1,24 @@
+{
+  "name": "matching_app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/hiroki-Fukumoto/matching-app.git",
+  "author": "hiroki-fukumoto <fuku0915@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.dart": [
+      "fvm flutter format"
+    ],
+    "*.@(json|yaml)": [
+      "prettier --write"
+    ]
+  }
+}
