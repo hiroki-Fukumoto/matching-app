@@ -5,7 +5,7 @@ info:
   title: Matching app
   version: "1.0"
 servers:
-- url: //localhost:8080
+- url: http://localhost:8080
 paths:
   /api/v1/health-check:
     get:
