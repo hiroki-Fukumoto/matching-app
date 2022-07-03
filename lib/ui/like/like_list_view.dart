@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LikeListView extends HookConsumerWidget {
-  const LikeListView({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const LikeListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

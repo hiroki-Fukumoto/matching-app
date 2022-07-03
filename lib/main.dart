@@ -1,110 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:matching_app/tab_item.dart';
 import 'package:matching_app/ui/home/home_view.dart';
 import 'package:matching_app/ui/like/like_list_view.dart';
 import 'package:matching_app/ui/message/message_list_view.dart';
 
-Future<void> main() async {
-  runApp(const ProviderScope(child: MyApp()));
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static const String _title = 'Flutter Code Sample';
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MainView(title: 'home'),
+    return const MaterialApp(
+      title: _title,
+      home: MyStatefulWidget(),
     );
   }
 }
 
-class MainView extends StatefulWidget {
-  const MainView({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
 
   @override
-  State<MainView> createState() => _MainViewState();
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
 
-class _MainViewState extends State<MainView> {
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
-  String _title = "";
-
-  static const List<Widget> _pageList = <Widget>[
-    HomeView(
-      title: 'home',
-    ),
-    LikeListView(
-      title: 'like',
-    ),
-    MessageListView(
-      title: 'message',
-    ),
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomeView(),
+    LikeListView(),
+    MessageListView()
   ];
 
-  void _onTap(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      switch (index) {
-        case 0:
-          {
-            _title = TabItem.home.name;
-          }
-          break;
-        case 1:
-          {
-            _title = TabItem.like.name;
-          }
-          break;
-        case 2:
-          {
-            _title = TabItem.message.name;
-          }
-          break;
-      }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _title = widget.title;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: const Text('BottomNavigationBar Sample'),
       ),
       body: Center(
-        child: _pageList.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: TabItem.home.name,
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.thumb_up_alt),
-            label: TabItem.like.name,
+            icon: Icon(Icons.thumb_up_alt),
+            label: 'Like',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.chat),
-            label: TabItem.message.name,
+            icon: Icon(Icons.chat),
+            label: 'Message',
           ),
         ],
         currentIndex: _selectedIndex,
-        // selectedItemColor: Colors.amber[800],
-        onTap: _onTap,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
     );
   }
