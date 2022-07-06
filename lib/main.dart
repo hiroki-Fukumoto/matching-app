@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:matching_app/ui/home/home_view.dart';
 import 'package:matching_app/ui/like/like_list_view.dart';
 import 'package:matching_app/ui/message/message_list_view.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
