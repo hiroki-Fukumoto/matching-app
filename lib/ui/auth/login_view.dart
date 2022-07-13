@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:matching_app/view_model/auth_vm.dart';
-import 'package:matching_app/view_model/login_vm.dart';
-
-import '../../view_model/api_error_vm.dart';
+import 'package:matching_app/view_model/user_view_model.dart';
 
 class LoginView extends HookConsumerWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -12,13 +9,9 @@ class LoginView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool isVisible = false;
 
-    final authState = ref.watch(authViewModelProvider);
-    final authVm = ref.watch(authViewModelProvider.notifier);
-    final loginVmState = ref.watch(loginViewModelProvider);
-    final loginVm = ref.watch(loginViewModelProvider.notifier);
-    final apiErrorState = ref.watch(apiErrorViewModelProvider);
-    final apiErrorViewModel = ref.watch(apiErrorViewModelProvider.notifier);
-    final errorMessages = apiErrorState.value?.messages.length ?? 0;
+    final _viewModel = ref.watch(userViewModelProvider);
+    _viewModel.setLoginEmail('');
+    _viewModel.setLoginPassword('');
 
     return Scaffold(
       appBar: AppBar(
@@ -32,20 +25,13 @@ class LoginView extends HookConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          for (int i = 0; i < errorMessages; i++)
-                            Text(apiErrorState.value?.messages[i] ?? '')
-                        ]),
                     TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: ValidateText.email,
                       decoration: const InputDecoration(
                           filled: true, hintText: 'Email'),
                       onChanged: (text) {
-                        loginVm.setEmail(text);
+                        _viewModel.setLoginEmail(text);
                       },
                     ),
                     const SizedBox(
@@ -66,7 +52,7 @@ class LoginView extends HookConsumerWidget {
                           filled: true,
                           hintText: 'Password'),
                       onChanged: (text) {
-                        loginVm.setPassword(text);
+                        _viewModel.setLoginPassword(text);
                       },
                       obscureText: !isVisible,
                     ),
@@ -74,16 +60,13 @@ class LoginView extends HookConsumerWidget {
                       height: 16,
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        authVm.login(loginVm.getEmail(), loginVm.getPassword());
-                        authState.when(
-                            data: (res) {
-                              Navigator.pop(context);
-                            },
-                            loading: () {},
-                            error: (error, _) {
-                              apiErrorViewModel.setApiError(error);
-                            });
+                      onPressed: () async {
+                        try {
+                          await _viewModel.login();
+                          Navigator.pop(context);
+                        } catch (e) {
+                          print(e);
+                        }
                       },
                       child: const Text("ログイン"),
                     ),

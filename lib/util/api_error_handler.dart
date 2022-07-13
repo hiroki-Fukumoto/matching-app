@@ -1,9 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:matching_app/view_model/api_error_vm.dart';
+
+class ApiError {
+  int status = 0;
+  String errorType = '';
+  List<String> messages = [];
+}
 
 class DioExceptions implements Exception {
-  ApiErrorModel err = ApiErrorModel();
-  ApiErrorModel getError() => err;
+  ApiError err = ApiError();
+  ApiError getError() => err;
 
   DioExceptions.fromDioError(DioError dioError) {
     switch (dioError.type) {
