@@ -29,6 +29,8 @@ class UserViewModel extends ChangeNotifier {
   String _loginEmail = '';
   String _loginPassword = '';
 
+  bool _isVisiblePassword = false;
+
   String _id = '';
   String _name = '';
   String? _avatar;
@@ -50,6 +52,15 @@ class UserViewModel extends ChangeNotifier {
 
   setLoginPassword(String val) {
     _loginPassword = val;
+  }
+
+  setIsVisiblePassword(bool val) {
+    _isVisiblePassword = val;
+    notifyListeners();
+  }
+
+  bool getIsVisiblePassword() {
+    return _isVisiblePassword;
   }
 
   Me getMe() {

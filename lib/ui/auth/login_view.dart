@@ -7,8 +7,6 @@ class LoginView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool isVisible = false;
-
     final _viewModel = ref.watch(userViewModelProvider);
     _viewModel.setLoginEmail('');
     _viewModel.setLoginPassword('');
@@ -42,11 +40,12 @@ class LoginView extends HookConsumerWidget {
                       validator: ValidateText.password,
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
-                            icon: Icon(isVisible
+                            icon: Icon(_viewModel.getIsVisiblePassword()
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                             onPressed: () {
-                              isVisible = !isVisible;
+                              bool val = _viewModel.getIsVisiblePassword();
+                              _viewModel.setIsVisiblePassword(!val);
                             },
                           ),
                           filled: true,
@@ -54,7 +53,7 @@ class LoginView extends HookConsumerWidget {
                       onChanged: (text) {
                         _viewModel.setLoginPassword(text);
                       },
-                      obscureText: !isVisible,
+                      obscureText: _viewModel.getIsVisiblePassword(),
                     ),
                     const SizedBox(
                       height: 16,
