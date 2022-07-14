@@ -94,7 +94,7 @@ class SignUpView extends HookConsumerWidget {
                       height: 16,
                     ),
                     Dropdown(
-                      options: sexList,
+                      options: prefectureList,
                       label: '都道府県',
                       onChanged: (String? text) {
                         _viewModel.setRegisterPrefecture(int.parse(text!));
@@ -104,7 +104,7 @@ class SignUpView extends HookConsumerWidget {
                       height: 16,
                     ),
                     Dropdown(
-                      options: sexList,
+                      options: birthdayYList,
                       label: '生年月日(年)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayY(text!);
@@ -114,7 +114,7 @@ class SignUpView extends HookConsumerWidget {
                       height: 16,
                     ),
                     Dropdown(
-                      options: sexList,
+                      options: birthdayMList,
                       label: '生年月日(月)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayM(text!);
@@ -124,7 +124,7 @@ class SignUpView extends HookConsumerWidget {
                       height: 16,
                     ),
                     Dropdown(
-                      options: sexList,
+                      options: birthdayDList,
                       label: '生年月日(日)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayD(text!);
