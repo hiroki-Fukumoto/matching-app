@@ -2,14 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:matching_app/view_model/user_view_model.dart';
 
+import '../../util/validator.dart';
+import '../components/dropdown.dart';
+import '../components/password_form.dart';
+import '../components/text_form.dart';
+
 class SignUpView extends HookConsumerWidget {
   const SignUpView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _viewModel = ref.watch(userViewModelProvider);
-    _viewModel.setLoginEmail('');
-    _viewModel.setLoginPassword('');
+    _viewModel.initRegisterForm();
+
+    List<Option> sexList = [
+      Option('male', '男性'),
+      Option('female', '女性'),
+      Option('other', 'その他')
+    ];
+
+    // TODO: API作成
+    List<Option> prefectureList = [
+      Option('1', '北海道'),
+      Option('47', '沖縄'),
+    ];
+
+    // TODO: 生年月日入力のウィジェット作成
+    List<Option> birthdayYList = [
+      Option('1992', '1992'),
+    ];
+    List<Option> birthdayMList = [
+      Option('09', '09'),
+    ];
+    List<Option> birthdayDList = [
+      Option('15', '15'),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -23,10 +50,8 @@ class SignUpView extends HookConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration:
-                          const InputDecoration(filled: true, hintText: '氏名'),
+                    TextForm(
+                      placeholder: '氏名',
                       onChanged: (text) {
                         _viewModel.setRegisterName(text);
                       },
@@ -34,11 +59,9 @@ class SignUpView extends HookConsumerWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: ValidateText.email,
-                      decoration: const InputDecoration(
-                          filled: true, hintText: 'メールアドレス'),
+                    TextForm(
+                      placeholder: 'メールアドレス',
+                      validateText: Validate.email,
                       onChanged: (text) {
                         _viewModel.setRegisterEmail(text);
                       },
@@ -46,104 +69,63 @@ class SignUpView extends HookConsumerWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: ValidateText.password,
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: Icon(_viewModel.getIsVisiblePassword()
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              bool val = _viewModel.getIsVisiblePassword();
-                              _viewModel.setIsVisiblePassword(!val);
-                            },
-                          ),
-                          filled: true,
-                          hintText: 'Password'),
-                      onChanged: (text) {
-                        _viewModel.setRegisterPassword(text);
+                    PasswordForm(
+                      isVisible: _viewModel.getIsVisiblePassword(),
+                      validateText: Validate.password,
+                      onChanged: (String text) {
+                        _viewModel.setLoginPassword(text);
                       },
-                      obscureText: _viewModel.getIsVisiblePassword(),
+                      onPressed: () {
+                        bool val = _viewModel.getIsVisiblePassword();
+                        _viewModel.setIsVisiblePassword(!val);
+                      },
                     ),
                     const SizedBox(
                       height: 16,
                     ),
-                    DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: '性別',
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'male',
-                          child: Text('男性'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'female',
-                          child: Text('女性'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'other',
-                          child: Text('その他'),
-                        ),
-                      ],
+                    Dropdown(
+                      options: sexList,
+                      label: '性別',
                       onChanged: (String? text) {
                         _viewModel.setRegisterSex(text!);
                       },
                     ),
-                    DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: '都道府県',
-                      ),
-                      // TODO: API作成
-                      items: const [
-                        DropdownMenuItem(
-                          value: 1,
-                          child: Text('北海道'),
-                        ),
-                      ],
-                      onChanged: (int? val) {
-                        _viewModel.setRegisterPrefecture(val!);
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Dropdown(
+                      options: sexList,
+                      label: '都道府県',
+                      onChanged: (String? text) {
+                        _viewModel.setRegisterPrefecture(int.parse(text!));
                       },
                     ),
-                    DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: '生年月日(年)',
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: '1992',
-                          child: Text('1992'),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Dropdown(
+                      options: sexList,
+                      label: '生年月日(年)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayY(text!);
                       },
                     ),
-                    DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: '生年月日(月)',
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: '09',
-                          child: Text('09'),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Dropdown(
+                      options: sexList,
+                      label: '生年月日(月)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayM(text!);
                       },
                     ),
-                    DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: '生年月日(日)',
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: '15',
-                          child: Text('15'),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Dropdown(
+                      options: sexList,
+                      label: '生年月日(日)',
                       onChanged: (String? text) {
                         _viewModel.setRegisterBirthdayD(text!);
                       },
@@ -165,29 +147,5 @@ class SignUpView extends HookConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class ValidateText {
-  static String? password(String? value) {
-    if (value != null) {
-      String pattern = r'^[a-zA-Z0-9]{8,}$';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(value)) {
-        return '8文字以上の英数字を入力してください';
-      }
-    }
-    return null;
-  }
-
-  static String? email(String? value) {
-    if (value != null) {
-      String pattern = r'^[0-9a-z_./?-]+@([0-9a-z-]+\.)+[0-9a-z-]+$';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(value)) {
-        return '正しいメールアドレスを入力してください';
-      }
-    }
-    return null;
   }
 }

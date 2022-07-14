@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:matching_app/view_model/user_view_model.dart';
 
+import '../../util/validator.dart';
+import '../components/password_form.dart';
+import '../components/text_form.dart';
+
 class LoginView extends HookConsumerWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _viewModel = ref.watch(userViewModelProvider);
-    _viewModel.setLoginEmail('');
-    _viewModel.setLoginPassword('');
+    _viewModel.initLoginForm();
 
     return Scaffold(
       appBar: AppBar(
@@ -23,11 +26,9 @@ class LoginView extends HookConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: ValidateText.email,
-                      decoration: const InputDecoration(
-                          filled: true, hintText: 'Email'),
+                    TextForm(
+                      placeholder: 'メールアドレス',
+                      validateText: Validate.email,
                       onChanged: (text) {
                         _viewModel.setLoginEmail(text);
                       },
@@ -35,25 +36,16 @@ class LoginView extends HookConsumerWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: ValidateText.password,
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: Icon(_viewModel.getIsVisiblePassword()
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              bool val = _viewModel.getIsVisiblePassword();
-                              _viewModel.setIsVisiblePassword(!val);
-                            },
-                          ),
-                          filled: true,
-                          hintText: 'Password'),
-                      onChanged: (text) {
+                    PasswordForm(
+                      isVisible: _viewModel.getIsVisiblePassword(),
+                      validateText: Validate.password,
+                      onChanged: (String text) {
                         _viewModel.setLoginPassword(text);
                       },
-                      obscureText: _viewModel.getIsVisiblePassword(),
+                      onPressed: () {
+                        bool val = _viewModel.getIsVisiblePassword();
+                        _viewModel.setIsVisiblePassword(!val);
+                      },
                     ),
                     const SizedBox(
                       height: 16,
@@ -75,29 +67,5 @@ class LoginView extends HookConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class ValidateText {
-  static String? password(String? value) {
-    if (value != null) {
-      String pattern = r'^[a-zA-Z0-9]{8,}$';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(value)) {
-        return '8文字以上の英数字を入力してください';
-      }
-    }
-    return null;
-  }
-
-  static String? email(String? value) {
-    if (value != null) {
-      String pattern = r'^[0-9a-z_./?-]+@([0-9a-z-]+\.)+[0-9a-z-]+$';
-      RegExp regExp = RegExp(pattern);
-      if (!regExp.hasMatch(value)) {
-        return '正しいメールアドレスを入力してください';
-      }
-    }
-    return null;
   }
 }

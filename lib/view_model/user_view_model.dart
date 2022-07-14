@@ -29,16 +29,16 @@ class UserViewModel extends ChangeNotifier {
   String _loginEmail = '';
   String _loginPassword = '';
 
-  String _regsterName = '';
-  String _regsterEmail = '';
-  String _regsterPassword = '';
-  String _regsterSex = '';
-  String _regsterBirthdayY = '';
-  String _regsterBirthdayM = '';
-  String _regsterBirthdayD = '';
-  int _regsterPrefecture = 1;
+  String _registerName = '';
+  String _registerEmail = '';
+  String _registerPassword = '';
+  String _registerSex = '';
+  String _registerBirthdayY = '';
+  String _registerBirthdayM = '';
+  String _registerBirthdayD = '';
+  int _registerPrefecture = 1;
 
-  bool _isVisiblePassword = false;
+  bool _isVisiblePassword = true;
 
   String _id = '';
   String _name = '';
@@ -55,6 +55,22 @@ class UserViewModel extends ChangeNotifier {
   UserRepository? repository;
   UserViewModel({this.repository});
 
+  initLoginForm() {
+    _loginEmail = '';
+    _loginPassword = '';
+  }
+
+  initRegisterForm() {
+    _registerName = '';
+    _registerEmail = '';
+    _registerPassword = '';
+    _registerSex = '';
+    _registerBirthdayY = '';
+    _registerBirthdayM = '';
+    _registerBirthdayD = '';
+    _registerPrefecture = 1;
+  }
+
   setLoginEmail(String val) {
     _loginEmail = val;
   }
@@ -64,35 +80,35 @@ class UserViewModel extends ChangeNotifier {
   }
 
   setRegisterName(String val) {
-    _regsterName = val;
+    _registerName = val;
   }
 
   setRegisterEmail(String val) {
-    _regsterEmail = val;
+    _registerEmail = val;
   }
 
   setRegisterPassword(String val) {
-    _regsterPassword = val;
+    _registerPassword = val;
   }
 
   setRegisterSex(String val) {
-    _regsterSex = val;
+    _registerSex = val;
   }
 
   setRegisterBirthdayY(String val) {
-    _regsterBirthdayY = val;
+    _registerBirthdayY = val;
   }
 
   setRegisterBirthdayM(String val) {
-    _regsterBirthdayM = val;
+    _registerBirthdayM = val;
   }
 
   setRegisterBirthdayD(String val) {
-    _regsterBirthdayD = val;
+    _registerBirthdayD = val;
   }
 
   setRegisterPrefecture(int val) {
-    _regsterPrefecture = val;
+    _registerPrefecture = val;
   }
 
   setIsVisiblePassword(bool val) {
@@ -111,13 +127,13 @@ class UserViewModel extends ChangeNotifier {
 
   Future<Me> register() async {
     final CreateUserRequest req = CreateUserRequest((b) => {
-          b.name = _regsterName,
-          b.email = _regsterEmail,
-          b.password = _regsterPassword,
-          b.sex = _regsterSex,
+          b.name = _registerName,
+          b.email = _registerEmail,
+          b.password = _registerPassword,
+          b.sex = _registerSex,
           b.birthday =
-              '$_regsterBirthdayY-$_regsterBirthdayM-$_regsterBirthdayD',
-          b.prefecture = _regsterPrefecture
+              '$_registerBirthdayY-$_registerBirthdayM-$_registerBirthdayD',
+          b.prefecture = _registerPrefecture
         });
 
     await repository?.register(req).then(
