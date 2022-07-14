@@ -29,6 +29,15 @@ class UserViewModel extends ChangeNotifier {
   String _loginEmail = '';
   String _loginPassword = '';
 
+  String _regsterName = '';
+  String _regsterEmail = '';
+  String _regsterPassword = '';
+  String _regsterSex = '';
+  String _regsterBirthdayY = '';
+  String _regsterBirthdayM = '';
+  String _regsterBirthdayD = '';
+  int _regsterPrefecture = 1;
+
   bool _isVisiblePassword = false;
 
   String _id = '';
@@ -54,6 +63,38 @@ class UserViewModel extends ChangeNotifier {
     _loginPassword = val;
   }
 
+  setRegisterName(String val) {
+    _regsterName = val;
+  }
+
+  setRegisterEmail(String val) {
+    _regsterEmail = val;
+  }
+
+  setRegisterPassword(String val) {
+    _regsterPassword = val;
+  }
+
+  setRegisterSex(String val) {
+    _regsterSex = val;
+  }
+
+  setRegisterBirthdayY(String val) {
+    _regsterBirthdayY = val;
+  }
+
+  setRegisterBirthdayM(String val) {
+    _regsterBirthdayM = val;
+  }
+
+  setRegisterBirthdayD(String val) {
+    _regsterBirthdayD = val;
+  }
+
+  setRegisterPrefecture(int val) {
+    _regsterPrefecture = val;
+  }
+
   setIsVisiblePassword(bool val) {
     _isVisiblePassword = val;
     notifyListeners();
@@ -66,6 +107,41 @@ class UserViewModel extends ChangeNotifier {
   Me getMe() {
     return Me(_id, _name, _avatar, _birthday, _email, _like, _message, _sex,
         _prefectureCode, _prefectureName);
+  }
+
+  Future<Me> register() async {
+    final CreateUserRequest req = CreateUserRequest((b) => {
+          b.name = _regsterName,
+          b.email = _regsterEmail,
+          b.password = _regsterPassword,
+          b.sex = _regsterSex,
+          b.birthday =
+              '$_regsterBirthdayY-$_regsterBirthdayM-$_regsterBirthdayD',
+          b.prefecture = _regsterPrefecture
+        });
+
+    await repository?.register(req).then(
+      (model) {
+        _id = model.id;
+        _name = model.name;
+        _avatar = model.avatar;
+        _birthday = model.birthday;
+        _email = model.email;
+        _like = model.like;
+        _message = model.message;
+        _sex = model.sex;
+        _prefectureCode = model.prefectureCode;
+        _prefectureName = model.prefectureName;
+        _apiToken = model.apiToken;
+
+        notifyListeners();
+      },
+      onError: (e) {
+        var err = DioExceptions.fromDioError(e).getError();
+        throw err.messages;
+      },
+    );
+    return getMe();
   }
 
   Future<Me> login() async {

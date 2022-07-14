@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:matching_app/ui/auth/login_view.dart';
+import 'package:matching_app/ui/auth/sign_up_view.dart';
 
 import '../../view_model/user_view_model.dart';
 
@@ -16,6 +17,16 @@ class HomeView extends HookConsumerWidget {
       child: Column(
         children: [
           Text(viewModel.getMe().name),
+          RaisedButton(
+            child: const Text('新規登録'),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SignUpView(),
+                  ));
+            },
+          ),
           RaisedButton(
             child: const Text('ログイン'),
             onPressed: () {
