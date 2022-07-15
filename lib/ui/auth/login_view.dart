@@ -11,8 +11,8 @@ class LoginView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _viewModel = ref.watch(userViewModelProvider);
-    _viewModel.initLoginForm();
+    final viewModel = ref.watch(userViewModelProvider);
+    viewModel.initLoginForm();
 
     return Scaffold(
       appBar: AppBar(
@@ -30,21 +30,21 @@ class LoginView extends HookConsumerWidget {
                       placeholder: 'メールアドレス',
                       validateText: Validate.email,
                       onChanged: (text) {
-                        _viewModel.setLoginEmail(text);
+                        viewModel.setLoginEmail(text);
                       },
                     ),
                     const SizedBox(
                       height: 16,
                     ),
                     PasswordForm(
-                      isVisible: _viewModel.getIsVisiblePassword(),
+                      isVisible: viewModel.getIsVisiblePassword(),
                       validateText: Validate.password,
                       onChanged: (String text) {
-                        _viewModel.setLoginPassword(text);
+                        viewModel.setLoginPassword(text);
                       },
                       onPressed: () {
-                        bool val = _viewModel.getIsVisiblePassword();
-                        _viewModel.setIsVisiblePassword(!val);
+                        bool val = viewModel.getIsVisiblePassword();
+                        viewModel.setIsVisiblePassword(!val);
                       },
                     ),
                     const SizedBox(
@@ -53,7 +53,7 @@ class LoginView extends HookConsumerWidget {
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          await _viewModel.login();
+                          await viewModel.login();
                           Navigator.pop(context);
                         } catch (e) {
                           print(e);

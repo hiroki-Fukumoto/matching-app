@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:matching_app/ui/auth/login_view.dart';
 import 'package:matching_app/ui/auth/sign_up_view.dart';
@@ -11,6 +12,13 @@ class HomeView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(userViewModelProvider);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        viewModel.fetchUsers();
+      });
+      return viewModel.dispose;
+    }, const []);
 
     return Scaffold(
         body: Center(
@@ -37,6 +45,9 @@ class HomeView extends HookConsumerWidget {
                   ));
             },
           ),
+          Column(
+            children: viewModel.getUsers().map((u) => Text(u.name)).toList(),
+          )
         ],
       ),
     ));

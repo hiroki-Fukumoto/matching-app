@@ -10,6 +10,7 @@ final userRepositoryProvider =
 abstract class UserRepository {
   Future<UserModel> register(req);
   Future<UserModel> login(req);
+  Future<List<UserResponse>> fetchUsers(token);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -58,6 +59,18 @@ class UserRepositoryImpl implements UserRepository {
       _model.prefectureCode = me?.prefecture.code ?? 0;
       _model.apiToken = res.data?.authentication.apiToken ?? '';
       return Future.value(_model);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<UserResponse>> fetchUsers(token) async {
+    final repository = _openApi.getUsersApi();
+
+    try {
+      final res = await repository.apiV1UsersGet(authorization: token);
+      return Future.value(res.data?.toList());
     } catch (e) {
       rethrow;
     }

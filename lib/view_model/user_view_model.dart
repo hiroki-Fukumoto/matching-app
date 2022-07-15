@@ -19,9 +19,24 @@ class Me {
   String sex = '';
   int prefectureCode = 1;
   String prefectureName = '';
-  String apiToken = '';
 
   Me(this.id, this.name, this.avatar, this.birthday, this.email, this.like,
+      this.message, this.sex, this.prefectureCode, this.prefectureName);
+}
+
+class User {
+  String id = '';
+  String name = '';
+  String? avatar;
+  String birthday = '';
+  String email = '';
+  int like = 0;
+  String? message;
+  String sex = '';
+  int prefectureCode = 1;
+  String prefectureName = '';
+
+  User(this.id, this.name, this.avatar, this.birthday, this.email, this.like,
       this.message, this.sex, this.prefectureCode, this.prefectureName);
 }
 
@@ -51,6 +66,8 @@ class UserViewModel extends ChangeNotifier {
   int _prefectureCode = 1;
   String _prefectureName = '';
   String _apiToken = '';
+
+  List<User> _users = [];
 
   UserRepository? repository;
   UserViewModel({this.repository});
@@ -125,6 +142,14 @@ class UserViewModel extends ChangeNotifier {
         _prefectureCode, _prefectureName);
   }
 
+  String getApiToken() {
+    return "Bearer $_apiToken";
+  }
+
+  List<User> getUsers() {
+    return _users;
+  }
+
   Future<Me> register() async {
     final CreateUserRequest req = CreateUserRequest((b) => {
           b.name = _registerName,
@@ -186,5 +211,26 @@ class UserViewModel extends ChangeNotifier {
       },
     );
     return getMe();
+  }
+
+  Future<List<User>> fetchUsers() async {
+    await repository?.fetchUsers(getApiToken()).then(
+      (res) {
+        List<User> users = [];
+        res.forEach((r) {
+          User u = User(r.id, r.name, r.avatar, r.birthday, '', r.like,
+              r.message, r.sex, r.prefecture.code, r.prefecture.name);
+          users.add(u);
+        });
+        _users = users;
+
+        notifyListeners();
+      },
+      onError: (e) {
+        var err = DioExceptions.fromDioError(e).getError();
+        throw err.messages;
+      },
+    );
+    return getUsers();
   }
 }
